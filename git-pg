@@ -1,0 +1,25 @@
+#!/bin/sh
+
+branch_name=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+gerrit_branch="${branch_name}_gerrit"
+# delete the integration branch and then create it.
+_=$(git branch -D ${gerrit_branch})
+_=$(git checkout -b ${gerrit_branch})
+# compute the branching point
+merge_base=$(git merge-base HEAD origin/master)
+# compute the first branch commit following the branching point
+first_branch_commit=$(git next-commit ${merge_base})
+# reset all commits on branch
+reset=$(git reset --soft ${merge_base})
+# commit all commits as one commit using the commit message from the first commit on the branch
+commit=$(git commit -a -c ${first_branch_commit} < `tty` > `tty`)
+while true; do
+    read -p "Post to gerrit? (Y/N)" yn
+    case $yn in 
+	[Yy]* ) pg; break;;
+	[Nn]* ) exit;;
+	*) echo "Please answer yes or no";;
+    esac
+done
+# return to feature branch
+_=$(git checkout ${branch_name})

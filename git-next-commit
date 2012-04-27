@@ -1,0 +1,5 @@
+#!/bin/sh
+
+commit=$1
+next=$(git rev-list $commit..HEAD | tail -n 1)
+echo $next
