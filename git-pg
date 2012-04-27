@@ -1,4 +1,8 @@
 #!/bin/sh
+# slurp mmmm
+
+# ugly convenience script to simplify branching with gerrit.
+# This will squash all the commits in your branch, and post to gerrit with the # message of the first commit in your branch, without messing with the history of your actual working branch.
 
 branch_name=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 gerrit_branch="${branch_name}_gerrit"
