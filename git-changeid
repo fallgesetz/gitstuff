@@ -1,5 +1,4 @@
 #!/bin/sh
 git_ref=$1
-
 change_id=$(git cat-file commit ${git_ref} | grep 'Change-Id:' | sed 's/Change-Id: \([a-z0-9]*\)/\1/')
 echo $change_id
